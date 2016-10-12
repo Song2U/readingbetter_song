@@ -3,11 +3,21 @@ google.charts.load("current", {
 });
 google.charts.setOnLoadCallback(drawChart);
 function drawChart() {
-	var data = google.visualization.arrayToDataTable([ [ "ID", "점수", {
-		role : "style"
-	} ], [ "kg00003", 2330, "gold" ], [ "test01", 1215, "#CBCBCB" ],
-			[ "test03", 996, "#CA9666" ] ]);
-
+	
+	var id0 = $("input[name=id0]").val();
+	var id1 = $("input[name=id1]").val();
+	var id2 = $("input[name=id2]").val();
+	
+	var score0 = parseInt($("input[name=score0]").val());
+	var score1 = parseInt($("input[name=score1]").val());
+	var score2 = parseInt($("input[name=score2]").val());
+	
+	var data = google.visualization.arrayToDataTable([	// 차트에 들어갈 데이터
+	             [ "ID", "점수", {role : "style"} ],
+	             [ id1, score1, "color : #CFCFCF; opacity: 0.8" ],
+	             [ id0, score0, "color : #FFFF70; opacity: 0.8" ],
+			[ id2, score2, "color : #EBB18F; opacity: 0.8" ] ]);
+	
 	var view = new google.visualization.DataView(data);
 	view.setColumns([ 0, 1, {
 		calc : "stringify",
@@ -21,20 +31,38 @@ function drawChart() {
 		width : 750,
 		height : 500,
 		bar : {
-			groupWidth : "75%"
+			groupWidth : "68%"
 		},
 		legend : {
-			position: 'bottom', textStyle: {color: 'white', fontSize: 1}	// 안 보이는 척 하기...
+			position: 'none'
 		},
 		annotations : {
 			textStyle : {
-				fontName : 'Trebuchet MS',
-				fontSize : 30,
+				fontName : 'Tahoma',
+				fontSize : 22,
 				bold : true,
 				// The transparency of the text.
 				opacity : 1
 			}
-		}
+		},
+		animation:{
+	        duration: 2500,
+	        easing: 'out',
+	        startup:'true'
+		},
+		hAxis : {
+			textStyle : {
+				color : '#181818',
+				auraColor : '#DCDCDC',
+				fontName : 'Arial',
+				fontSize : 25,
+				bold : true
+			}
+		},
+		vAxis : {
+			textPosition : 'none'
+		},
+		
 	};
 	var chart = new google.visualization.ColumnChart(document
 			.getElementById("graph"));

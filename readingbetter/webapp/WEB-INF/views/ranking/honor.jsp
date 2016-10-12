@@ -10,6 +10,7 @@
 <link href="/readingbetter/assets/css/ranking.css" rel="stylesheet" type="text/css">
 <link href="/readingbetter/assets/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
+<!-- 그래프 자바스크립트  -->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript" src="/readingbetter/assets/js/honorgraph.js"></script>
 
@@ -30,6 +31,10 @@
 					</div>
 					<div id="top3" class="col-lg-6">
 						<p id="title">★ Reading Better Top 3 ★</p>
+						<c:forEach items="${totalTopRanker }" var="scoresvo"  varStatus="status">
+							<input type="hidden" name="id${status.index }" value="${scoresvo.id }">
+							<input type="hidden" name="score${status.index }" value="${scoresvo.totalScore }">
+						</c:forEach>
 						<div id="graph"></div>
 					</div>
 
