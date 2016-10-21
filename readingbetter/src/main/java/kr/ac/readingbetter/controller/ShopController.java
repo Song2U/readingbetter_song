@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import kr.ac.readingbetter.service.HistoryService;
 import kr.ac.readingbetter.service.ScoresService;
 import kr.ac.readingbetter.service.ShopService;
+import kr.ac.readingbetter.vo.GifticonVo;
 import kr.ac.readingbetter.vo.HistoryVo;
 import kr.ac.readingbetter.vo.MemberVo;
 import kr.ac.readingbetter.vo.ScoresVo;
@@ -63,7 +64,8 @@ public class ShopController {
 	// 구입 차감 모달
 	@ResponseBody
 	@RequestMapping(value = "/shop/buy", method = RequestMethod.POST)
-	public ScoresVo shopbuy(HttpSession session, HistoryVo historyVo, @RequestBody ShopVo vo) throws Exception {
+	public ScoresVo shopbuy(HttpSession session, GifticonVo gifticonVo, HistoryVo historyVo, @RequestBody ShopVo vo)
+			throws Exception {
 		// 로그인 정보로 scores 호출
 		MemberVo authUser = (MemberVo) session.getAttribute("authUser");
 		ScoresVo scoresVo = scoresService.selectScores(authUser.getNo());
@@ -84,8 +86,15 @@ public class ShopController {
 		historyVo.setPoint(vo.getPrice());
 		historyVo.setMemberNo(authUser.getNo());
 		historyVo.setIdentity(1);
-		historyVo.setKeyNo(vo.getNo());		
+		historyVo.setKeyNo(vo.getNo());
 		historyService.insertHistory(historyVo);
+
+		gifticonVo.setMemberNo(authUser.getNo());
+		gifticonVo.setCover(
+				"http://ec2-52-34-170-68.us-west-2.compute.amazonaws.com/images/barcode/barcode" + vo.getNo() + ".jpg");
+		gifticonVo.setTitle(vo.getTitle());
+		shopService.gifticonInsert(gifticonVo);
+
 		return scoresVo;
 	}
 }

@@ -75,6 +75,10 @@ public class MainController {
 			String id = authUser.getId();
 			List<ScoresVo> mainGrade = scoresService.mainGrade(id);
 			model.addAttribute("mainGrade", mainGrade);
+			
+			// 학년 정보 받아오기
+			vo = scoresService.monthlyMyGradeRank(id);
+			model.addAttribute("monthlyMyGradeRank", vo);
 		}
 		
 		if(authUser != null){
@@ -160,5 +164,10 @@ public class MainController {
 	@ResponseBody
 	public void removeAttend(HttpSession session){
 		session.removeAttribute("checkAttend");
+	}
+	
+	@RequestMapping(value = "/newmain")
+	public String newMain(){
+		return "main/index";
 	}
 }

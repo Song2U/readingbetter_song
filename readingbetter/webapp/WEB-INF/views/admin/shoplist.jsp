@@ -21,21 +21,20 @@
 	<form id="search_form" action="/readingbetter/admin/shoplist" method="post">
 		<input type="text" id="title" name="title"> <input type="submit" value="찾기">
 	</form>
-
-	<div id="buttons">
-		<a href="shopaddform" class="btn btn-default">추가</a>
-	</div>
 	
-	<div>
-		<br> <br>
-		<table id="shopgoods" class="table table-bordered table-hover">
+	<div id="board">
+		<div id="button-set">
+			<a href="shopaddform" class="btn btn-default">추가</a>
+		</div>
+		<br>
+		<table id="shopgoods" class="table table-bordered">
 			<thead>
-				<tr>
+				<tr class="active">
 					<th>번호</th>
 					<th>사진</th>
 					<th>상품명</th>
 					<th>가격</th>
-					<th>삭제</th>
+					<th></th>
 				</tr>
 			</thead>
 			<c:forEach items="${getGoodsList}" var="shopVo">
@@ -45,7 +44,10 @@
 						<td><img id="img-shop" class="img-thumbnail" src="${shopVo.cover}" /></td>
 						<td>${shopVo.title}</td>
 						<td>${shopVo.price}</td>
-						<td><a href="/readingbetter/admin/shoplist/delete?no=${shopVo.no}">삭제</a></td>
+						<td>
+							<a href="/readingbetter/admin/shoplist/modifyform?no=${shopVo.no}">수정</a>
+							<a href="/readingbetter/admin/shoplist/delete?no=${shopVo.no}">삭제</a>
+						</td>
 					</tr>
 				</tbody>
 			</c:forEach>

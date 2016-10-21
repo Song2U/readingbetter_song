@@ -28,8 +28,7 @@ function drawChart() {
 
 	var options = {
 		title : "",
-		width : 750,
-		height : 500,
+		height : 400,
 		bar : {
 			groupWidth : "68%"
 		},
@@ -39,7 +38,7 @@ function drawChart() {
 		annotations : {
 			textStyle : {
 				fontName : 'Tahoma',
-				fontSize : 22,
+				fontSize : 18,
 				bold : true,
 				// The transparency of the text.
 				opacity : 1
@@ -55,7 +54,7 @@ function drawChart() {
 				color : '#181818',
 				auraColor : '#DCDCDC',
 				fontName : 'Arial',
-				fontSize : 25,
+				fontSize : 19,
 				bold : true
 			}
 		},
