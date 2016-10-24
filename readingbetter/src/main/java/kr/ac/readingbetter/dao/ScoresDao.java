@@ -17,8 +17,12 @@ public class ScoresDao {
 
 	// 전체 랭킹
 	public List<ScoresVo> monthlyRank(ScoresVo vo) {
-		return sqlSession.selectList("scores.monthlyRank", vo); 
+		return sqlSession.selectList("scores.monthlyRank", vo);
+	}
 
+	// 월별 점수 초기화
+	public void MonthUpdate(ScoresVo vo) {
+		sqlSession.update("scores.updateMonth", vo);
 	}
 
 	// 로그인 한 회원 전체 랭킹
@@ -95,13 +99,18 @@ public class ScoresDao {
 	public List<ScoresVo> mainGrade(String id) {
 		return sqlSession.selectList("scores.mainGrade", id);
 	}
-	
+
 	// 출석체크
-	public void updateAttendBonus(HistoryVo vo){
+	public void updateAttendBonus(HistoryVo vo) {
 		sqlSession.update("scores.updateAttendBonus", vo);
 	}
-	
+
 	public ScoresVo myScores(Long no) {
 		return sqlSession.selectOne("myScores", no);
+	}
+
+	// 회원 퀴즈 승인 시 캔디 증가
+	public void pointUpdate(Long memberNo) {
+		sqlSession.update("scores.pointUpdate", memberNo);
 	}
 }

@@ -2,25 +2,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="quiz">
-	
-	<!-- 퀴즈 리스트, 책 테이블에서  책 이름 가져옴 -->
+
+	<!-- 퀴즈 리스트, 책 테이블에서 책 이름 가져옴 -->
 	<select id="list" parameterType="quizvo" resultType="quizvo">
 		<![CDATA[
-			select a.no, b.title, a.quiz, a.ex1, a.ex2, a.ex3, a.ex4, a.answer, 
-			a.accept, a.book_no as bookNo from quiz a, book b 
-			where a.book_no=b.no order by b.title
+			select a.no, 
+				   b.title, 
+				    replace(a.quiz, '_', ' ') quiz,
+				    replace(a.ex1, '_', ' ') ex1, 
+				    replace(a.ex2, '_', ' ') ex2, 
+				    replace(a.ex3 , '_', ' ') ex3, 
+			           replace(a.ex4 , '_', ' ') ex4, 
+			           replace(a.answer , '_', ' ') answer, 
+				   a.accept, 
+				   a.book_no as bookNo,
+				   a. member_no as memberNo
+				from quiz a, book b 
+				where a.book_no = b.no 
+				order by b.title
 		]]>
 	</select>
 
-	<!-- 기본키에 따른 조회, 책 테이블에서  책 이름 가져옴 -->
+	<!-- 기본키에 따른 조회, 책 테이블에서 책 이름 가져옴 -->
 	<select id="getByNo" parameterType="long" resultType="quizvo">
 		<![CDATA[
-			select a.no, b.title, a.quiz, a.ex1, a.ex2, a.ex3, a.ex4, a.answer, 
-			a.accept, a.book_no as bookNo from quiz a, book b 
-			where a.book_no=b.no and a.no=#{no}
+			select a.no, 
+				   b.title, 
+				    replace(a.quiz, '_', ' ') quiz,
+				    replace(a.ex1, '_', ' ') ex1, 
+				    replace(a.ex2, '_', ' ') ex2, 
+				    replace(a.ex3 , '_', ' ') ex3, 
+			           replace(a.ex4 , '_', ' ') ex4, 
+			           replace(a.answer , '_', ' ') answer, 
+				   a.accept, 
+				   a.book_no as bookNo,
+				   a. member_no as memberNo
+				from quiz a, book b 
+				where a.book_no = b.no and a.no = #{no};
 		]]>
 	</select>
-	
+
 	<!-- 랜덤으로 배열 후, 상위 5개 퀴즈 조회 -->
 	<select id="selectQuiz" parameterType="Long" resultType="quizvo">
 		<![CDATA[
@@ -39,7 +60,7 @@
 			select * from quiz where no=#{no} and answer=#{selected}
 		]]>
 	</select>
-	
+
 	<select id="selectAnswer" parameterType="long" resultType="String">
 		<![CDATA[
 			select answer from quiz where no=#{no}
@@ -55,7 +76,7 @@
 							ex3=#{ex3}, 
 							ex4=#{ex4}, 
 							answer=#{answer}, 
-							accept=#{accept} 
+							accept=#{accept}
 				where no=#{no}
 		]]>
 	</update>
@@ -65,7 +86,7 @@
 		<![CDATA[
 			insert into quiz 
 				values(seq_quiz.nextval, #{quiz}, #{ex1}, #{ex2}, #{ex3}, 
-					   #{ex4}, #{answer}, #{accept}, #{bookNo})
+					   #{ex4}, #{answer}, #{accept}, #{bookNo}, #{memberNo})
 		]]>
 	</insert>
 

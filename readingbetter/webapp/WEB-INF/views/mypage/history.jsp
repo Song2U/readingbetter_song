@@ -28,15 +28,16 @@
 	</div>
 	
 	<div id="cont">
-		<div id="history">
+		<div id="basic-menu">
 			<div class="small-menu">
 				<a href="/readingbetter/main">홈</a> > 
 				<a href="/readingbetter/mypage/info">내 정보</a> > 나의 활동
 			</div>
 
 			<p class="menu-title">나의 활동</p>
-			<br>
-
+		</div>
+		
+		<div id="history">
 			<div class="col-lg-6">
 				<div id="profile">
 					<img id="img" class="img-circle" src="http://ec2-52-34-170-68.us-west-2.compute.amazonaws.com/images/pikachu.png">
@@ -74,14 +75,16 @@
 					<th>인증</th>
 					<th>날짜</th>
 				</tr>
-
+				
+				<c:set var="listLength"	value="${fn:length(historylist) }" />
 				<c:forEach var='vo' items='${historylist}' varStatus='s'>
 					<tr>
-						<td>${vo.no}</td>
+						<td>${listLength - s.index }</td>
 						<td>
 							<c:choose>
-                   				 <c:when test="${vo.identity == 0}">문제풀기</c:when>
+                   				 <c:when test="${vo.identity == 0}">문제 풀기</c:when>
                    				 <c:when test="${vo.identity == 1}">상점</c:when>
+                   				 <c:when test="${vo.identity == 2 }">문제 내기</c:when>
                    				 <c:when test="${vo.identity == 3}">출석체크</c:when>
           					 </c:choose>
 						</td>
@@ -89,7 +92,7 @@
 						<td>${vo.score }</td>
 						<td>
 							<c:choose>
-                   				 <c:when test="${vo.identity == 0 || vo.identity == 3 }">+${vo.point }</c:when>
+                   				 <c:when test="${vo.identity == 0 || vo.identity == 2 ||vo.identity == 3}">+${vo.point }</c:when>
                    				 <c:when test="${vo.identity == 1}">-${vo.point }</c:when>
 	           				</c:choose>
 						</td>

@@ -62,7 +62,7 @@ public class BookController {
 	// 책 리스트 검색, 페이징
 	@RequestMapping(value = "/booklist", method = RequestMethod.GET)
 	public String bookListPage(BookVo bookvo, Model model) {
-		int pageLength =5;
+		int pageLength = 5;
 		int beginPage;
 
 		if (bookvo.getPageNo() == null) {
@@ -72,7 +72,7 @@ public class BookController {
 		if (bookvo.getBkwd() == null) {
 			bookvo.setBkwd("");
 		}
-		
+
 		String bkwd = bookvo.getBkwd();
 		bookvo.setBkwd(bkwd);
 		List<BookVo> list = bookService.getListService(bookvo);
@@ -98,14 +98,14 @@ public class BookController {
 		model.addAttribute("total", total);
 		return "book/booklist";
 	}
-	
+
 	// 책 구매
 	@RequestMapping(value = "/buybook", method = RequestMethod.GET)
-	public String buyBook(Model model, @RequestParam("title") String title, 
-			@RequestParam(value = "pageNo", required = false, defaultValue="1") int currentPage){
+	public String buyBook(Model model, @RequestParam("title") String title,
+			@RequestParam(value = "pageNo", required = false, defaultValue = "1") int currentPage) {
 		// 책 구매 목록
 		List<BuyBookVo> buyBookList = bookService.buyBook(title);
-		
+
 		// 페이징
 		int listLength = buyBookList.size();
 		final int pageLength = 5;
@@ -113,17 +113,17 @@ public class BookController {
 		int endPage;
 		int currentBlock;
 		final int items = 5;
-		
+
 		int maxPage = ((listLength - 1) / pageLength) + 1; // 5개면 1페이지, 6개면 2페이지
-		
-		currentBlock = ((currentPage - 1) / pageLength); 	// 5페이지면 0, 6페이지면 1
-		beginPage = 1 + pageLength * currentBlock;			// 5페이지면 1, 6페이지면 6
-		endPage = pageLength + pageLength * currentBlock;	// 5페이지면 5, 6페이지면 10
-		
-		if(endPage > maxPage){
+
+		currentBlock = ((currentPage - 1) / pageLength); // 5페이지면 0, 6페이지면 1
+		beginPage = 1 + pageLength * currentBlock; // 5페이지면 1, 6페이지면 6
+		endPage = pageLength + pageLength * currentBlock; // 5페이지면 5, 6페이지면 10
+
+		if (endPage > maxPage) {
 			endPage = maxPage;
 		}
-		
+
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("buyBookList", buyBookList);
 		model.addAttribute("beginPage", beginPage);
@@ -131,7 +131,7 @@ public class BookController {
 		model.addAttribute("maxPage", maxPage);
 		model.addAttribute("items", items);
 		model.addAttribute("listLength", listLength);
-		
+
 		return "book/buybook";
 	}
 	///////////////////////////////////////////////////////////////////////////
@@ -147,7 +147,13 @@ public class BookController {
 
 	// 퀴즈 내기
 	@RequestMapping(value = "/makequizinsert", method = RequestMethod.POST)
-	public String makequizInsert(@ModelAttribute QuizVo vo) {
+	public String makequizInsert(@ModelAttribute QuizVo vo, HttpSession session) {
+		// 로그인 한 회원 정보 불러오기
+		MemberVo authUser = (MemberVo) session.getAttribute("authUser");
+
+		// 로그인 한 회원의 회원 번호 vo에 삽입
+		vo.setMemberNo(authUser.getNo());
+		System.out.println(vo);
 		bookService.quizAdd(vo);
 		return "redirect:/book/booklist";
 	}
@@ -160,7 +166,7 @@ public class BookController {
 	public Integer existQuiz(@RequestParam("no") Long no) {
 		List<QuizVo> list = bookService.selectQuiz(no);
 		int count = list.size();
-		
+
 		return count;
 	}
 
@@ -180,18 +186,16 @@ public class BookController {
 
 		return "book/solvequizform";
 	}
-	
+
 	@RequestMapping("/resultquiz")
-	public String resultQuiz(
-			@RequestParam(value="count") Integer count,
-			@RequestParam(value="no", required = false, defaultValue = "") Long bookNo,
-			HttpSession session,
-			Model model){
-		MemberVo authUser = (MemberVo)session.getAttribute("authUser");
-		if(authUser == null){
+	public String resultQuiz(@RequestParam(value = "count") Integer count,
+			@RequestParam(value = "no", required = false, defaultValue = "") Long bookNo, HttpSession session,
+			Model model) {
+		MemberVo authUser = (MemberVo) session.getAttribute("authUser");
+		if (authUser == null) {
 			return "redirect:/main";
 		}
-		
+
 		// select card by random
 		CardVo cardVo = cardService.selectCardByRandom();
 
@@ -203,21 +207,19 @@ public class BookController {
 		model.addAttribute("bookVo", bookVo);
 		model.addAttribute("cardVo", cardVo);
 		model.addAttribute("complete", completeSession);
-		
+
 		return "book/resultquiz";
 	}
-	
-	@RequestMapping(value="/countquiz", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/countquiz", method = RequestMethod.POST)
 	@ResponseBody
-	public Integer resultQuiz(
-			@RequestBody List<AnswerVo> answerList,
-			HttpSession session){
+	public Integer resultQuiz(@RequestBody List<AnswerVo> answerList, HttpSession session) {
 		if (session.getAttribute("complete") != null) {
 			session.removeAttribute("complete");
 		}
-		
+
 		Integer count = bookService.getCount(answerList);
-		
+
 		return count;
 	}
 
@@ -269,7 +271,7 @@ public class BookController {
 
 		// history insert
 		BookVo vo = bookService.getByNo(bookNo);
-	    historyVo.setTitle(vo.getTitle());
+		historyVo.setTitle(vo.getTitle());
 		historyVo.setScore(score);
 		historyVo.setPoint(point);
 		historyVo.setMemberNo(authUser.getNo());

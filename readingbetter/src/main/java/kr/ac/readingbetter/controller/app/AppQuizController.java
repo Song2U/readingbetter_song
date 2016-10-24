@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import kr.ac.readingbetter.service.AdminQuizService;
 import kr.ac.readingbetter.service.BookService;
 import kr.ac.readingbetter.service.CardService;
 import kr.ac.readingbetter.service.CertificationService;
@@ -21,32 +20,29 @@ import kr.ac.readingbetter.vo.CertificationVo;
 import kr.ac.readingbetter.vo.HistoryVo;
 import kr.ac.readingbetter.vo.QuizVo;
 
-
-
-
 @Controller
 @RequestMapping("/quizapp")
 public class AppQuizController {
-	
-	@Autowired
-	private AdminQuizService quizService;
+
 	@Autowired
 	private HistoryService historyService;
+
 	@Autowired
 	private BookService bookService;
+
 	@Autowired
 	private ScoresService scoresService;
+
 	@Autowired
 	private CertificationService certificationService;
+
 	@Autowired
 	private CardService cardService;
 
-	
-
 	@ResponseBody
 	@RequestMapping(value = "insertquiz", method = RequestMethod.GET)
-	public String InsertQuiz(@ModelAttribute QuizVo vo,
-		Long bookNo,String quiz,String ex1,String ex2,String ex3,String ex4,String answer ) {
+	public void InsertQuiz(@ModelAttribute QuizVo vo, Long bookNo, String quiz, String ex1, String ex2, String ex3,
+			String ex4, String answer, Long memberNo) {
 		vo.setBookNo(bookNo);
 		vo.setQuiz(quiz);
 		vo.setEx1(ex1);
@@ -54,8 +50,8 @@ public class AppQuizController {
 		vo.setEx3(ex3);
 		vo.setEx4(ex4);
 		vo.setAnswer(answer);
-		quizService.quizAdd(vo);
-		return "";
+		vo.setMemberNo(memberNo);
+		bookService.quizAdd(vo);
 	}
 
 	@ResponseBody
@@ -65,12 +61,9 @@ public class AppQuizController {
 		return list;
 	}
 
-	
-
 	@ResponseBody
 	@RequestMapping(value = "historyScores", method = RequestMethod.GET)
-	public String InsertHistory(HistoryVo historyVo,Long memberNo,Long bookNo,
-			Integer score,Integer point) {
+	public void InsertHistory(HistoryVo historyVo, Long memberNo, Long bookNo, Integer score, Integer point) {
 		// history insert
 		historyVo.setScore(score);
 		historyVo.setPoint(point);
@@ -82,30 +75,24 @@ public class AppQuizController {
 		historyService.insertHistory(historyVo);
 		// scores update
 		scoresService.updateScores(historyVo);
-		return "";
-
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "cert", method = RequestMethod.GET)
-	public String InsertCert(CertificationVo certVo,Long memberNo,Long bookNo) {
-		//certification insert
+	public void InsertCert(CertificationVo certVo, Long memberNo, Long bookNo) {
+		// certification insert
 		certVo.setBookNo(bookNo);
 		certVo.setMemberNo(memberNo);
-		certificationService.insertCertification(certVo);		
-		return "";
-
+		certificationService.insertCertification(certVo);
 	}
-
 
 	@ResponseBody
 	@RequestMapping(value = "certification", method = RequestMethod.GET)
-	public CertificationVo certification(CertificationVo certVo,Long memberNo,Long bookNo) {
+	public CertificationVo certification(CertificationVo certVo, Long memberNo, Long bookNo) {
 		certVo.setMemberNo(memberNo);
 		certVo.setBookNo(bookNo);
 		CertificationVo certVo2 = certificationService.selectCertification(certVo);
 		return certVo2;
-
 	}
 
 	@ResponseBody
@@ -114,6 +101,5 @@ public class AppQuizController {
 		// select card by random
 		CardVo cardVo = cardService.selectCardByRandom();
 		return cardVo;
-
 	}
 }
